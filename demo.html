@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * {margin:0;padding:0;list-style:none;text-decoration:none;}
+            .tiny-slider {
+                height: 500px;
+                width: 888px;
+                margin: 0 auto;
+                overflow:hidden;
+                position:relative;
+            }
+            .tiny-slider-item {
+                position:absolute;
+                top:0;
+                left:0;
+                height:500px;
+                width:100%;
+            }
+            .tiny-slider-prev , .tiny-slider-next {
+                position:absolute;
+                bottom:30%;
+                left:8%;
+                width:50px;
+                height:50px;
+                background:#000;
+                background:rgba(0,0,0,.5);
+            }
+            .tiny-slider-next {
+                left:80%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="tiny-slider" data-name="tiny-slider">
+            <ul>
+                <li class="tiny-slider-item"><a href="javascript:;"><img src="images/1.jpg" alt="" /></a></li>
+                <li class="tiny-slider-item" ><a href="javascript:;"><img src="images/2.jpg" alt="" /></a></li>
+                <li class="tiny-slider-item"><a href="javascript:;"><img src="images/3.jpg" alt="" /></a></li>
+            </ul>
+            <a class="tiny-slider-prev" href="javascript:;" style="z-index: 5"></a>
+            <a class="tiny-slider-next" href="javascript:;" style="z-index: 5"></a>
+        </div>
+        <script src="jquery.js"></script>
+        <script src="slider.js"></script>
+    </body>
+</html>
