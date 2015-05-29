@@ -15,3 +15,7 @@
         
 #调用方式
   $('[data-name=tiny-slider]').tinySlider();
+
+#还有许多功能待完成....
+
+在线演示：http://115.29.111.37/slider/
