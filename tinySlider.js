@@ -1,3 +1,6 @@
+// 左右箭头没有美化 no
+// 指示器没有添加  no
+// 没有将图片src放在li 的data-url里面，减少图片下载 ok
 (function ($, win, doc) {
     "use strict";
     var PLUGIN_NAME = "tinySlider";
@@ -40,21 +43,13 @@
             else {
                 direction = targetIndex > currentIndex;
             }
-
-            if (direction) {
-                isBoundary = !targetIndex;
-                reverse = screenWidth;
-            }
-            else {
-                isBoundary = targetIndex === imgTotal - 1;
-                reverse = -screenWidth;
-            }
-            this.router(targetIndex, currentIndex, isBoundary, reverse, this.options.delay);
+            reverse ? screenWidth : -screenWidth;
+            
+            this.router(targetIndex, currentIndex, reverse, this.options.delay);
 
             this.currentIndex = targetIndex;
         },
-        
-        router: function (targetIndex, currentIndex, position, screenWidth, delay) {        
+        router: function (targetIndex, currentIndex, screenWidth, delay) {
             // 组件时，缓存
             var $sliderItem = this.$sliderItem;
             var imgTotal = this.imgTotal;
@@ -63,9 +58,14 @@
             var $targetItem = $sliderItem.eq(targetIndex);
             // 当前位置的引用
             var $currentItem = $sliderItem.eq(currentIndex);
-            var $sliderItemFirst = $sliderItem.eq(0);
-
-            $sliderItemFirst.css("z-index", position ? imgTotal : "");
+            var $targetItemImg = $("img" , $targetItem);
+            
+            // 后增加
+            if($targetItemImg.attr("data-src")) {
+                $targetItemImg.attr("src" , $targetItemImg.attr("data-src"));
+                $targetItemImg.removeAttr("data-src");
+            }
+            
             // 每次运动的时候，先设置初始位置,然后必须都要显示，然后在运动
             $targetItem.css({
                 left: screenWidth,
@@ -75,35 +75,58 @@
                 left: 0,
                 display: "block"
             });
-
             $targetItem.stop(true).animate({"left": 0}, delay);
             // 当前位置显示过去后，要隐藏自己
             $currentItem.stop(true).animate({"left": -screenWidth}, delay, function () {
                 $(this).hide();
             });
         },
-        
+        fireLoop: function () {
+            var that = this;
+            clearInterval(that.timer);
+            that.timer = setInterval(function () {
+                that.triggerPic(that.currentIndex + 1);
+            }, that.options.delay*7);
+        },
         init: function () {
             // 获取各种引用
             var that = this;
+            var fireLoop = null;
             var $slider = this.$element;
             this.$sliderItem = $(".tiny-slider-item", $slider);
             this.$sliderPrev = $(".tiny-slider-prev", $slider);
             this.$sliderNext = $(".tiny-slider-next", $slider);
             this.imgTotal = this.$sliderItem.length;
             this.currentIndex = 0;
+            
+            var $sliderItemFirst = $( "img" , this.$sliderItem ).eq(0);
             // 这个应该由最外层的元素决定
             this.screenWidth = $slider.width();
-            this.$sliderPrev.on("click", function(){
+  
+            this.$sliderPrev.on("click", function () {
+                clearInterval(that.timer);
                 that.triggerPic(that.currentIndex - 1);
             });
             this.$sliderNext.on("click", function () {
+                
+                clearInterval(that.timer);
                 that.triggerPic(that.currentIndex + 1);
             });
-            
+
             //初始化的时候，让第一张显示，其他隐藏
-            this.$sliderItem.first().show()
+            this.$sliderItem.eq(0).show()
                     .siblings().hide();
+            $sliderItemFirst.attr("src",$sliderItemFirst.attr("data-src"));
+            $sliderItemFirst.removeAttr("data-src");
+            // 自动循环
+            this.fireLoop();
+
+            // 悬浮图片时停止，离开时，继续
+            this.$element.hover(function () {
+                clearInterval(that.timer);
+            }, function () {
+                that.fireLoop();
+            });
         }
     };
 
@@ -124,7 +147,7 @@
         return (that ? that : this);
     };
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         $("[data-name=tiny-slider]")[PLUGIN_NAME]();
     });
 })(jQuery, window, document);
