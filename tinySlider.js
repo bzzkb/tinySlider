@@ -20,8 +20,6 @@
         triggerPic: function (targetIndex) {
             // 方向每次都是需要确定的，所以为局部
             var direction = null;
-            // 判断是否是首尾位置
-            var isBoundary = null;
             // 逆向是需要取反的
             var reverse = null;
             // 转换为组件后的缓存：
