@@ -1,6 +1,6 @@
 // 左右箭头没有美化 no
 // 指示器没有添加  no
-// 没有将图片src放在li 的data-url里面，减少图片下载 ok
+// 将图片src放在img 的data-src里面，减少图片下载 ok
 (function ($, win, doc) {
     "use strict";
     var PLUGIN_NAME = "tinySlider";
