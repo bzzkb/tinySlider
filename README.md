@@ -5,9 +5,9 @@
 
         <div class="tiny-slider" data-name="tiny-slider">
             <ul>
-                <li class="tiny-slider-item"><a href="javascript:;"><img src="images/1.jpg" alt="" /></a></li>
-                <li class="tiny-slider-item" ><a href="javascript:;"><img src="images/2.jpg" alt="" /></a></li>
-                <li class="tiny-slider-item"><a href="javascript:;"><img src="images/3.jpg" alt="" /></a></li>
+                <li class="tiny-slider-item"><a href="javascript:;"><img data-src="images/1.jpg" src="images/loading.gif" alt="" /></a></li>
+                <li class="tiny-slider-item" ><a href="javascript:;"><img data-src="images/2.jpg" src="images/loading.gif"  alt="" /></a></li>
+                <li class="tiny-slider-item"><a href="javascript:;"><img data-src="images/3.jpg" src="images/loading.gif"  alt="" /></a></li>
             </ul>
             <a class="tiny-slider-prev" href="javascript:;" style="z-index: 5"></a>
             <a class="tiny-slider-next" href="javascript:;" style="z-index: 5"></a>
