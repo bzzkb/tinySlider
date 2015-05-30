@@ -41,7 +41,7 @@
             else {
                 direction = targetIndex > currentIndex;
             }
-            reverse ? screenWidth : -screenWidth;
+            reverse = direction ? screenWidth : -screenWidth;
             
             this.router(targetIndex, currentIndex, reverse, this.options.delay);
 
