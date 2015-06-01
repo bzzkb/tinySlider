@@ -1,6 +1,6 @@
 // 左右箭头没有美化 no
 // 指示器没有添加  no
-// 将图片src放在img 的data-src里面，减少图片下载 ok
+// 没有将图片src放在li 的data-url里面，减少图片下载 ok
 (function ($, win, doc) {
     "use strict";
     var PLUGIN_NAME = "tinySlider";
@@ -20,12 +20,19 @@
         triggerPic: function (targetIndex) {
             // 方向每次都是需要确定的，所以为局部
             var direction = null;
+            // 判断是否是首尾位置
+            var isBoundary = null;
             // 逆向是需要取反的
             var reverse = null;
             // 转换为组件后的缓存：
             var imgTotal = this.imgTotal;
             var currentIndex = this.currentIndex;
             var screenWidth = this.screenWidth;
+            
+            // 如果将要过去的元素正在运动中，那么
+            if( this.$sliderItem.is(":animated")){
+                return false;
+            }
             // 说明，是next方向的，当前位置是最后一张，目标图片位置是第一张，
             if (targetIndex === imgTotal) {
                 targetIndex = 0;
@@ -41,13 +48,21 @@
             else {
                 direction = targetIndex > currentIndex;
             }
-            reverse = direction ? screenWidth : -screenWidth;
+
+            if (direction) {
+                isBoundary = !targetIndex;
+                reverse = screenWidth;
+            }
+            else {
+                isBoundary = targetIndex === imgTotal - 1;
+                reverse = -screenWidth;
+            }
             
-            this.router(targetIndex, currentIndex, reverse, this.options.delay);
+            this.router(targetIndex, currentIndex, isBoundary, reverse, this.options.delay);
 
             this.currentIndex = targetIndex;
         },
-        router: function (targetIndex, currentIndex, screenWidth, delay) {
+        router: function (targetIndex, currentIndex, position, screenWidth, delay) {
             // 组件时，缓存
             var $sliderItem = this.$sliderItem;
             var imgTotal = this.imgTotal;
@@ -56,14 +71,18 @@
             var $targetItem = $sliderItem.eq(targetIndex);
             // 当前位置的引用
             var $currentItem = $sliderItem.eq(currentIndex);
+            var $sliderItemFirst = $sliderItem.eq(0);
             var $targetItemImg = $("img" , $targetItem);
+            
+            //$sliderItemFirst.css("z-index", position ? imgTotal : "");
             
             // 后增加
             if($targetItemImg.attr("data-src")) {
                 $targetItemImg.attr("src" , $targetItemImg.attr("data-src"));
                 $targetItemImg.removeAttr("data-src");
             }
-            
+            // 动画开始前，将，将要去的目标元素记下，用于下次比对
+            this.animateElement = $targetItem;
             // 每次运动的时候，先设置初始位置,然后必须都要显示，然后在运动
             $targetItem.css({
                 left: screenWidth,
